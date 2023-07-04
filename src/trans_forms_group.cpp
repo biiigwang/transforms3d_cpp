@@ -28,7 +28,7 @@ Matrix4d TransFormsGroup::getTransForm(const std::string &start,
     {
       if (c.name == paths[i + 1])
       {
-        matrix = c.t * matrix;
+        matrix *= c.t;
       }
     }
   }
