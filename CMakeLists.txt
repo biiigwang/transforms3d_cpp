@@ -37,6 +37,7 @@ add_executable(${PROJECT_NAME}_test
 )
 target_link_libraries(${PROJECT_NAME}_test
     gtest
+    pthread
 )
 
 # 代码格式检查
