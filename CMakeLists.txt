@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.4.1)
 project(transforms3d_cpp)
 set(LIB_VERSION 0.1.0)
 set(LIB_NAME  transforms3d_cpp)
-SET(CMAKE_BUILD_TYPE "DEBUG")
-
+SET(CMAKE_BUILD_TYPE "Release")
+option(TRANSFORMS_STATIC_LIBRARY "Build transforms3d as a static library" ON)
 add_compile_options(-Werror)
 find_package(Eigen3 REQUIRED)
 include_directories(
@@ -16,11 +16,18 @@ file(GLOB_RECURSE PROJECT_SRC "src/*.cpp")
 # 添加测试文件
 file(GLOB_RECURSE PROJECT_TESTS "tests/*_test.cpp")
 
-
+if(TRANSFORMS_STATIC_LIBRARY)
+add_library(${LIB_NAME}
+    STATIC
+    ${PROJECT_SRC}
+)
+else()
 add_library(${LIB_NAME}
     SHARED
     ${PROJECT_SRC}
 )
+endif()
+
 target_link_libraries(${LIB_NAME} ${EIGEN3_LIB})
 
 
