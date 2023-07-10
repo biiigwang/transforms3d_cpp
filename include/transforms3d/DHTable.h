@@ -68,9 +68,11 @@ class DhRowCraig {
   /// @brief 计算alpha_{i-1}的转换矩阵
   void computeT_alpha() {
     // clang-format off
+    S c_a = cos(alpha_i_1);
+    S s_a = sin(alpha_i_1);
     m_T_alpha << 1, 0, 0, 0,
-                 0, cos(alpha_i_1), -sin(alpha_i_1), 0,
-                 0, sin(alpha_i_1), cos(alpha_i_1), 0,
+                 0, c_a, -s_a, 0,
+                 0, s_a,  c_a, 0,
                  0, 0, 0, 1;
     // clang-format on
   };
@@ -88,10 +90,12 @@ class DhRowCraig {
   /// @brief 计算theta_i的转换矩阵
   void computeT_theta() {
     // clang-format off
-    m_T_theta << cos(theta_i), -sin(theta_i), 0, 0,
-                 sin(theta_i), cos(theta_i), 0, 0,
-                 0, 0, 1, 0,
-                 0, 0, 0, 1;
+    S c_t = cos(theta_i);
+    S s_t = sin(theta_i);
+    m_T_theta << c_t, -s_t, 0, 0,
+                 s_t,  c_t, 0, 0,
+                   0,    0, 1, 0,
+                   0,    0, 0, 1;
     // clang-format on
   };
 
@@ -109,9 +113,14 @@ class DhRowCraig {
   void computeTransform() {
     // clang-format off
     // m_T = m_T_alpha * m_T_a * m_T_theta * m_T_d; 
-    m_T << cos(theta_i), -sin(theta_i), 0, a_i_1,
-           sin(theta_i) * cos(alpha_i_1), cos(theta_i) * cos(alpha_i_1), -sin(alpha_i_1), -sin(alpha_i_1) * d_i,
-           sin(theta_i) * sin(alpha_i_1), cos(theta_i) * sin(alpha_i_1), cos(alpha_i_1), cos(alpha_i_1) * d_i,
+    S c_t = cos(theta_i);
+    S s_t = sin(theta_i);
+    S c_a = cos(alpha_i_1);
+    S s_a = sin(alpha_i_1);
+
+    m_T << c_t, -s_t, 0, a_i_1,
+           s_t * c_a, c_t * c_a, -s_a, -s_a * d_i,
+           s_t * s_a, c_t * s_a, c_a, c_a * d_i,
            0, 0, 0, 1;
     // clang-format on    
   };
