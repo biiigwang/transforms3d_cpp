@@ -9,15 +9,15 @@
 #include <transforms3d/transforms3d.h>
 using namespace std;
 using namespace Eigen;
+using namespace transforms3d;
 
 #include "gtest/gtest.h"
-
 TEST(TestTransFormGroup, TransPcl)
 {
   /* base@llaser1  */
-  Matrix4d base2llaser1 = TransForms::ComposeEuler(0, 0, 0, 180, 0, 0);
+  Matrix4d base2llaser1 = TransFormsd::ComposeEuler(0, 0, 0, 180, 0, 0);
 
-  TransFormsGroup tfg;
+  TransFormsGroupd tfg;
   tfg.pushTransForm("base_link", "line_laser1", base2llaser1);
   std::vector<Vector3d> points;
   for (int i = 0; i < 2; i++)
@@ -36,9 +36,9 @@ TEST(TestTransFormGroup, TransPcl)
 TEST(TestTransFormGroup, TransPcl2)
 {
   /* base@llaser1  */
-  Matrix4d base2llaser1 = TransForms::ComposeEuler(0, 0, 1, 0, 0, 0);
+  Matrix4d base2llaser1 = TransFormsd::ComposeEuler(0, 0, 1, 0, 0, 0);
 
-  TransFormsGroup tfg;
+  TransFormsGroupd tfg;
   tfg.pushTransForm("base_link", "line_laser1", base2llaser1);
   std::vector<Vector3d> points;
   for (int i = 0; i < 20000; i++)
@@ -59,12 +59,12 @@ TEST(TestTransFormGroup, TransPcl3)
   IOFormat HeavyFmt(FullPrecision, 0, ", ", ";\n", "[", "]", "[", "]");
   std::string sep = "\n----------------------------------------\n";
   /* base@llaser1  */
-  Matrix4d base2llaser1 = TransForms::ComposeEuler(0.043, -0.163, 0.0571, 76, 14, -72.511); // xyz r p y
+  Matrix4d base2llaser1 = TransFormsd::ComposeEuler(0.043, -0.163, 0.0571, 76, 14, -72.511); // xyz r p y
   std::cout << base2llaser1.format(HeavyFmt) << sep;
   // static_transform_publisher x y z yaw pitch roll frame_id child_frame_id
   // rosrun tf2_ros static_transform_publisher base linerlaser2 0.043 -0.163 0.0571 76 14 -72.511
   // rosrun tf2_ros static_transform_publisher  0.043 -0.163 0.0571 -1.265555  0.24434609  1.3264502 base linerlaser2
-  TransFormsGroup tfg_;
+  TransFormsGroupd tfg_;
   tfg_.pushTransForm("base", "linerlaser2", base2llaser1);
   float angle = 0.299000;
   float dis = 0.033816;
@@ -74,11 +74,11 @@ TEST(TestTransFormGroup, TransPcl3)
   // rosrun tf2_ros static_transform_publisher 0.300746 0.096994 0 0 0 0 linerlaser2 point0
   std::vector<Vector3d> points;
   points.push_back({x, y, 0.0f});
-  tfg_.pushTransForm("linerlaser2", "point0", TransForms::ComposeEuler(x, y, 0, 0, 0, 0));
+  tfg_.pushTransForm("linerlaser2", "point0", TransFormsd::ComposeEuler(x, y, 0, 0, 0, 0));
   std::cout << tfg_.toString() << std::endl;
   tfg_.getTransWithPointCloud("linerlaser2", points, "base");
   printf("line_laser(%f,%f,%f)\n", points[0].x(), points[0].y(), points[0].z());
-  std::cout << TransForms::H2EulerAngle(
+  std::cout << TransFormsd::H2EulerAngle(
                    tfg_.getTransForm("base", "point0"))
             << std::endl;
 }

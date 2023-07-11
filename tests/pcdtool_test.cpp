@@ -10,6 +10,7 @@
 #include <transforms3d/transforms3d.h>
 using namespace std;
 using namespace Eigen;
+using namespace transforms3d;
 
 #include "gtest/gtest.h"
 

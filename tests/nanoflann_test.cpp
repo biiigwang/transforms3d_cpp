@@ -10,7 +10,7 @@
 #include <transforms3d/transforms3d.h>
 using namespace std;
 using namespace Eigen;
-
+using namespace transforms3d;
 #include "gtest/gtest.h"
 
 struct PointCloud
@@ -37,9 +37,9 @@ struct PointCloud
 TEST(TestKDTREE, TestSearch)
 {
     /* base@llaser1  */
-    Matrix4d base2llaser1 = TransForms::ComposeEuler(0, 0, 1, 0, 0, 0);
+    Matrix4d base2llaser1 = TransFormsd::ComposeEuler(0.0, 0.0, 1.0, 0.0, 0.0, 0.0);
 
-    TransFormsGroup tfg;
+    TransFormsGroupd tfg;
     tfg.pushTransForm("base_link", "laser", base2llaser1);
     std::vector<Vector3d> points;
     PointCloud pcd;
