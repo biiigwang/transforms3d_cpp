@@ -13,7 +13,7 @@
 #define DHTABLE_H
 #include <math.h>
 
-#include "Eigen/Dense"
+#include "IDhTable.h"
 
 namespace transforms3d {
 
@@ -24,7 +24,7 @@ namespace transforms3d {
  * @tparam S type
  */
 template <typename S>
-class DhRowCraig {
+class DhRowCraig : public IDhRow<S> {
  public:
   /// @brief alpha_{i-1}: 以 𝑋𝑖−1方向看， 𝑍𝑖−1和 𝑍𝑖间的夹角
   S alpha_i_1;
@@ -59,11 +59,6 @@ class DhRowCraig {
   DhRowCraig();
   DhRowCraig(S alpha_i_1, S a_i_1, S theta_i, S d_i)
       : alpha_i_1(alpha_i_1), a_i_1(a_i_1), theta_i(theta_i), d_i(d_i) {}
-
-  /// @brief 计算转换矩阵
-  Eigen::Matrix4<S> computeTransform() const {
-
-  };
 
   /// @brief 计算alpha_{i-1}的转换矩阵
   void computeT_alpha() {
@@ -112,16 +107,16 @@ class DhRowCraig {
   /// @brief 计算转换矩阵
   void computeTransform() {
     // clang-format off
-    // m_T = m_T_alpha * m_T_a * m_T_theta * m_T_d; 
-    S c_t = cos(theta_i);
-    S s_t = sin(theta_i);
-    S c_a = cos(alpha_i_1);
-    S s_a = sin(alpha_i_1);
+    m_T = m_T_alpha * m_T_a * m_T_theta * m_T_d; 
+    // S c_t = cos(theta_i);
+    // S s_t = sin(theta_i);
+    // S c_a = cos(alpha_i_1);
+    // S s_a = sin(alpha_i_1);
 
-    m_T << c_t, -s_t, 0, a_i_1,
-           s_t * c_a, c_t * c_a, -s_a, -s_a * d_i,
-           s_t * s_a, c_t * s_a, c_a, c_a * d_i,
-           0, 0, 0, 1;
+    // m_T << c_t, -s_t, 0, a_i_1,
+    //        s_t * c_a, c_t * c_a, -s_a, -s_a * d_i,
+    //        s_t * s_a, c_t * s_a, c_a, c_a * d_i,
+    //        0, 0, 0, 1;
     // clang-format on    
   };
 
@@ -138,10 +133,10 @@ class DhRowCraig {
   Eigen::Matrix4<S> T_d() const { return m_T_d; }
 
   /// @brief 获取转换矩阵
-  Eigen::Matrix4<S> T() const { return m_T; }
+  Eigen::Matrix4<S> getTransform() const override  { return m_T; }
 
   /// @brief 初始化
-  void init() {
+  void build() override {
     computeT_alpha();
     computeT_a();
     computeT_theta();

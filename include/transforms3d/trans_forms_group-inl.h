@@ -13,16 +13,12 @@
 #include <deque>
 #include <iomanip>
 #include <iostream>
-using namespace std;
-using namespace Eigen;
 
 namespace transforms3d {
 
-extern template
-class TransFormsGroup<double>;
+extern template class TransFormsGroup<double>;
 
-extern template
-class TransFormsGroup<float>;
+extern template class TransFormsGroup<float>;
 
 template <typename S>
 Matrix4<S> TransFormsGroup<S>::getTransForm(const std::string &start,
@@ -148,7 +144,7 @@ std::string TransFormsGroup<S>::toString() {
              std::to_string(vxd[5]) + "," + std::to_string(vxd[4]) + "," +
              std::to_string(vxd[3]) + "\n";
     }
-    cout << endl;
+    std::cout << std::endl;
     str += "\n";
   }
   return str;
@@ -231,4 +227,4 @@ std::vector<Vector3<S>> TransFormsGroup<S>::getTransWithPointCloud(
 }
 }  // namespace transforms3d
 
-#endif // TRANS_FORMS_GROUP_INL_H
+#endif  // TRANS_FORMS_GROUP_INL_H

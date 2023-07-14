@@ -12,6 +12,7 @@
 #ifndef BASEGROUP_H
 #define BASEGROUP_H
 
+#include <algorithm>
 #include <deque>
 #include <iostream>
 #include <map>
@@ -25,7 +26,7 @@ class BasePath {
  public:
   std::string name;
   std::vector<std::string> path;
-  BasePath(const std::string& name, const std::vector<std::string>& path)
+  BasePath(const std::string &name, const std::vector<std::string> &path)
       : name(name), path(path) {}
   virtual ~BasePath() {}
 };
@@ -194,6 +195,6 @@ class BaseGroup {
   virtual ~BaseGroup() {}
 };
 
-}  // namespace CDC
+}  // namespace transforms3d
 
 #endif  // BASEGROUP_H
