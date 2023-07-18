@@ -165,6 +165,19 @@ class DhRowCraig : public IDhRow<S> {
     return ss.str();
   }
 
+  bool operator==(const DhRowCraig<S> &other) const {
+    return alpha_i_1 == other.alpha_i_1
+        && a_i_1 == other.a_i_1
+        && theta_i == other.theta_i
+        && d_i == other.d_i
+        && m_T_alpha == other.m_T_alpha
+        && m_T_a == other.m_T_a
+        && m_T_theta == other.m_T_theta
+        && m_T_d == other.m_T_d
+        && m_T == other.m_T;
+  }
+  bool operator!=(const DhRowCraig<S> &other) const { return !(*this == other); }
+
 
 };
 
