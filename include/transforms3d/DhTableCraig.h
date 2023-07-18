@@ -13,7 +13,12 @@
 #define DHTABLE_H
 #include <math.h>
 
+#include <iomanip>
+#include <ios>
+#include <ostream>
+
 #include "IDhTable.h"
+#include "transforms3d/transforms3d.h"
 
 namespace transforms3d {
 
@@ -56,15 +61,17 @@ class DhRowCraig : public IDhRow<S> {
 
  public:
   /// @brief 构造函数
-  DhRowCraig();
+  DhRowCraig() = default;
   DhRowCraig(S alpha_i_1, S a_i_1, S theta_i, S d_i)
       : alpha_i_1(alpha_i_1), a_i_1(a_i_1), theta_i(theta_i), d_i(d_i) {}
+
+  DhTableType getType() override { return DhTableType::CRAIG; }
 
   /// @brief 计算alpha_{i-1}的转换矩阵
   void computeT_alpha() {
     // clang-format off
-    S c_a = cos(alpha_i_1);
-    S s_a = sin(alpha_i_1);
+    S c_a = cos(TransForms<S>::Degrees(alpha_i_1));
+    S s_a = sin(TransForms<S>::Degrees(alpha_i_1));
     m_T_alpha << 1, 0, 0, 0,
                  0, c_a, -s_a, 0,
                  0, s_a,  c_a, 0,
@@ -85,8 +92,8 @@ class DhRowCraig : public IDhRow<S> {
   /// @brief 计算theta_i的转换矩阵
   void computeT_theta() {
     // clang-format off
-    S c_t = cos(theta_i);
-    S s_t = sin(theta_i);
+    S c_t = cos(TransForms<S>::Degrees(theta_i));
+    S s_t = sin(TransForms<S>::Degrees(theta_i));
     m_T_theta << c_t, -s_t, 0, 0,
                  s_t,  c_t, 0, 0,
                    0,    0, 1, 0,
@@ -132,6 +139,9 @@ class DhRowCraig : public IDhRow<S> {
   /// @brief 获取d_i的转换矩阵
   Eigen::Matrix4<S> T_d() const { return m_T_d; }
 
+  Eigen::Matrix4<S> T() const { return m_T; }
+  void set_T(const Eigen::Matrix4<S> &T) { m_T = T; }
+
   /// @brief 获取转换矩阵
   Eigen::Matrix4<S> getTransform() const override  { return m_T; }
 
@@ -143,6 +153,19 @@ class DhRowCraig : public IDhRow<S> {
     computeT_d();
     computeTransform();
   }
+
+  /// @brief toString
+  std::string toString() const override {
+    std::stringstream ss;
+    ss << std::right
+     << "alpha:" << std::setw(4)<< alpha_i_1 << ","
+     << "a:" << std::setw(4)<< a_i_1 << ","
+     << "theta:" << std::setw(4)<< theta_i << ","
+     << "d:" << std::setw(4)<< d_i << ";";
+    return ss.str();
+  }
+
+
 };
 
 using DhRowCraigf = DhRowCraig<float>;

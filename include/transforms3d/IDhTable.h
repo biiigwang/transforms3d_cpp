@@ -16,6 +16,7 @@
 #include <map>
 #include <memory>
 #include <string>
+
 #include "transforms3d/transforms3d.h"
 
 namespace transforms3d {
@@ -35,6 +36,9 @@ class IDhRow {
 
   /// @brief 获取相对于父节点的坐标变换
   virtual Eigen::Matrix4<S> getTransform() const = 0;
+
+  /// @brief toString
+  virtual std::string toString() const = 0;
 };
 
 }  // namespace transforms3d

@@ -29,7 +29,7 @@ class BaseGroupChild {
 class IGroupChildFactory {
  public:
   virtual ~IGroupChildFactory(){};
-  virtual std::shared_ptr<BaseGroupChild> create(const std::string& m_name) = 0;
+  virtual std::unique_ptr<BaseGroupChild> create(const std::string& m_name) = 0;
 };
 }  // namespace CDC
 

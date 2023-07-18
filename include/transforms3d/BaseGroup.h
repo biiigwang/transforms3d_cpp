@@ -17,6 +17,7 @@
 #include <iostream>
 #include <map>
 #include <memory>
+#include <string>
 #include <vector>
 
 #include "BaseGroupChild.h"
@@ -39,6 +40,20 @@ class BaseGroup {
  public:
   BaseGroup(std::shared_ptr<IGroupChildFactory> child_factory)
       : m_child_factory(child_factory) {}
+
+  [[nodiscard]] virtual bool getChild(
+      std::string name, std::vector<std::shared_ptr<BaseGroupChild>> &child) {
+    bool find_child = false;
+    typename std::map<std::string,
+                      std::vector<std::shared_ptr<BaseGroupChild>>>::iterator
+        iter;
+
+    if ((iter = m_childs.find(name)) != m_childs.end()) {
+      child = iter->second;
+      find_child = true;
+    }
+    return find_child;
+  }
 
   /**
    * @brief: 将存储的节点数据按照字符串形式输出
@@ -143,7 +158,8 @@ class BaseGroup {
       }
       if (!has_child) {
         // 没有这个孩子，添加孩子
-        auto new_child = m_child_factory->create(child);
+        std::shared_ptr<BaseGroupChild> new_child =
+            std::move(m_child_factory->create(child));
         // new_child->name = child;
         // 多态操作
         // new_child.t = matrix;
@@ -151,7 +167,8 @@ class BaseGroup {
       }
     } else {
       // 添加一个节点
-      auto new_child = m_child_factory->create(child);
+      std::shared_ptr<BaseGroupChild> new_child =
+          std::move(m_child_factory->create(child));
       // new_child->name = child;
       // new_child.t = matrix;
       std::vector<std::shared_ptr<BaseGroupChild>> new_childs;
@@ -173,15 +190,16 @@ class BaseGroup {
       }
       if (!has_child) {
         // 没有这个孩子，添加孩子
-        auto new_child = m_child_factory->create(child);
-
+        std::shared_ptr<BaseGroupChild> new_child =
+            std::move(m_child_factory->create(child));
         new_child->name = parent;
         // new_child.t = matrix.inverse();
         m_childs[child].push_back(new_child);
       }
     } else {
       // 添加一个节点
-      auto new_child = m_child_factory->create(child);
+      std::shared_ptr<BaseGroupChild> new_child =
+          std::move(m_child_factory->create(child));
 
       new_child->name = parent;
       // new_child.t = matrix.inverse();
