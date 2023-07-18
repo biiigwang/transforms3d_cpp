@@ -157,11 +157,11 @@ class DhRowCraig : public IDhRow<S> {
   /// @brief toString
   std::string toString() const override {
     std::stringstream ss;
-    ss << std::right
-     << "alpha:" << std::setw(4)<< alpha_i_1 << ","
-     << "a:" << std::setw(4)<< a_i_1 << ","
-     << "theta:" << std::setw(4)<< theta_i << ","
-     << "d:" << std::setw(4)<< d_i << ";";
+    ss << std::right << std::fixed
+     << "alpha:"<< std::setprecision(std::abs(alpha_i_1)<1e-6?0:2) << std::setw(7) <<std::setfill(' ') << alpha_i_1 << ","
+     << "a:"    << std::setprecision(std::abs(a_i_1)<1e-6?0:2) << std::setw(7) <<std::setfill(' ') << a_i_1 << ","
+     << "theta:"<< std::setprecision(std::abs(theta_i)<1e-6?0:2) << std::setw(7) <<std::setfill(' ') << theta_i << ","
+     << "d:"    << std::setprecision(std::abs(d_i)<1e-6?0:2) << std::setw(7) <<std::setfill(' ') << d_i << ";";
     return ss.str();
   }
 
