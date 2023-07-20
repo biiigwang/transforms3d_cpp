@@ -21,7 +21,7 @@
 
 namespace transforms3d {
 
-enum class DhTableType { CRAIG, STD };
+enum class DhTableType { CRAIG, STD, ADDY };
 
 template <typename S>
 class IDhRow {
