@@ -49,7 +49,7 @@ class BaseGroup {
         iter;
 
     if ((iter = m_childs.find(name)) != m_childs.end()) {
-      child = iter->second;
+      child = m_childs[iter->first];
       find_child = true;
     }
     return find_child;
@@ -71,7 +71,7 @@ class BaseGroup {
       for (int i = 0; i < iter->second.size(); i++) {
         str += "\tchild: " + iter->second[i]->name;
       }
-      std::cout << std::endl;
+      // std::cout << std::endl;
       str += "\n";
     }
     return str;
@@ -210,6 +210,86 @@ class BaseGroup {
 
     return true;
   }
+
+  /**
+   * @brief: 添加一个节点
+   * @param {const std::string&} parent  父节点名字
+   * @param {std::unique_ptr<BaseGroupChild>} parent_ptr
+   * 父节点指针（一般父指针的旋转矩阵是子节点中的逆矩阵）
+   * @param {const std::string&} child  子节点名字
+   * @param {std::unique_ptr<BaseGroupChild>} child_ptr  子节点指针
+   * @return {bool}  是否添加成功
+   */
+  virtual bool addChild(const std::string &parent,
+                        std::unique_ptr<BaseGroupChild> parent_ptr,
+                        const std::string &child,
+                        std::unique_ptr<BaseGroupChild> child_ptr) {
+    bool has_parent_node = true, has_child_node = true;
+    if (m_childs.find(parent) == m_childs.end()) has_parent_node = false;
+    if (m_childs.find(child) == m_childs.end()) has_child_node = false;
+
+    // 分情况判断
+    if (has_parent_node) {
+      std::vector<std::shared_ptr<BaseGroupChild>> childs = m_childs[parent];
+      bool has_child = false;
+      for (int i = 0; i < childs.size(); i++) {
+        if (childs[i]->name == child) {
+          has_child = true;
+          // NOTE: do someting 这里应该是一个多态操作，但是我不知道怎么写
+          m_childs[parent][i] = std::move(parent_ptr);
+        }
+      }
+      if (!has_child) {
+        // 没有这个孩子，添加孩子
+        std::shared_ptr<BaseGroupChild> new_child = std::move(parent_ptr);
+        new_child->name = child;
+        // 多态操作
+        // new_child.t = matrix;
+        m_childs[parent].push_back(new_child);
+      }
+    } else {
+      // 添加一个节点
+      std::shared_ptr<BaseGroupChild> new_child = std::move(parent_ptr);
+      new_child->name = child;
+      // new_child.t = matrix;
+      std::vector<std::shared_ptr<BaseGroupChild>> new_childs;
+      new_childs.push_back(new_child);
+      //添加一个父节点
+      m_childs[parent] = new_childs;
+    }
+
+    // 分情况判断
+    if (has_child_node) {
+      std::vector<std::shared_ptr<BaseGroupChild>> childs = m_childs[child];
+      bool has_child = false;
+      for (int i = 0; i < childs.size(); i++) {
+        if (childs[i]->name == parent) {
+          has_child = true;
+          // // 更新已有的矩阵
+          m_childs[child][i] = std::move(child_ptr);
+        }
+      }
+      if (!has_child) {
+        // 没有这个孩子，添加孩子
+        std::shared_ptr<BaseGroupChild> new_child = std::move(child_ptr);
+        new_child->name = parent;
+        // new_child.t = matrix.inverse();
+        m_childs[child].push_back(new_child);
+      }
+    } else {
+      // 添加一个节点
+      std::shared_ptr<BaseGroupChild> new_child = std::move(child_ptr);
+
+      new_child->name = parent;
+      // new_child.t = matrix.inverse();
+      std::vector<std::shared_ptr<BaseGroupChild>> new_childs;
+      new_childs.push_back(new_child);
+      m_childs[child] = new_childs;
+    }
+
+    return true;
+  }
+
   virtual ~BaseGroup() {}
 };
 
