@@ -99,10 +99,10 @@ Matrix4<S> TransFormsGroup<S>::pushTransForm(const std::string &parent,
     std::vector<Child> childs = tfg[child];
     bool has_child = false;
     for (int i = 0; i < childs.size(); i++) {
-      if (childs[i].name == child) {
+      if (childs[i].name == parent) {
         has_child = true;
         // 更新已有的矩阵
-        tfg[child][i].t = matrix;
+        tfg[child][i].t = matrix.inverse();
       }
     }
     if (!has_child) {
