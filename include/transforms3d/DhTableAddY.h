@@ -41,7 +41,7 @@ class DhRowAddY : public IDhRow<S> {
   /// @brief 沿着 𝑍𝑖方向， 𝑋𝑖−1和 𝑋𝑖间的距离
   S d_i;
 
-  /// @brief 沿着 Y𝑖+1方向， Z𝑖和 Z𝑖−1间的距离
+  /// @brief 沿着 Y𝑖+1方向， Z𝑖+1和 Z𝑖间的距离
   S l_i1;
 
  private:
@@ -132,6 +132,7 @@ class DhRowAddY : public IDhRow<S> {
   /// @brief 计算转换矩阵
   void computeTransform() {
     // clang-format off
+    // TODO：此处待优化
     m_T = m_T_alpha * m_T_a * m_T_theta * m_T_d * m_T_l; 
     // S c_t = cos(theta_i);
     // S s_t = sin(theta_i);
