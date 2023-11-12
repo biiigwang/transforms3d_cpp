@@ -84,11 +84,11 @@ class BaseGroup {
    * @return {std::vector<std::string> }  路径数组
    */
   virtual std::vector<std::string> findPath(const std::string &start,
-                                            const std::string &end) {
+                                            const std::string &end) const {
     std::deque<BasePath> que;
     std::vector<std::string> researched = {start};
     if (start == end) return researched;
-    for (auto c : m_childs[start]) {
+    for (const auto &c : m_childs.at(start)) {
       BasePath path = {c->name, {start, c->name}};
       que.push_back(path);
     }
@@ -115,7 +115,7 @@ class BaseGroup {
           // cout<<"fing node"<<endl;
           return path.path;
         } else {
-          for (auto c : m_childs[path.name]) {
+          for (const auto &c : m_childs.at(path.name)) {
             // cout<<"prepare add "<<c.name<<endl;
             if (std::find(researched.begin(), researched.end(), c->name) ==
                 researched.end()) {
